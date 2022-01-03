@@ -1,7 +1,7 @@
 package models
 
 type Levels struct {
-	ID   uint32 `json:"id" db:"lvl_id" validate:"isFK"`
+	ID   uint32 `json:"id" db:"lvl_id"`
 	Name string `json:"name" validate:"required,lte=30" filter:"lk" db:"lvl_name"`
 }
 

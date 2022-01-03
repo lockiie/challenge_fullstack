@@ -1,0 +1,29 @@
+<mat-toolbar color="primary" class="header">
+    <mat-icon (click)="sidenav.toggle()" class="hamburger">menu</mat-icon>
+    <div>Challenge Fullstack</div>
+    <span class="nav-tool-items">
+  </span>
+</mat-toolbar>
+
+<mat-sidenav-container>
+
+    <mat-sidenav #sidenav [mode]="isBiggerScreen() ? 'over' : 'side'" [(opened)]="opened" [fixedInViewport]="true" [fixedTopGap]>
+        <mat-nav-list>
+            <a mat-list-item routerLinkActive="active" routerLink="/levels/add">
+                <mat-icon>add</mat-icon> Add Level
+            </a>
+            <a mat-list-item routerLinkActive="active" routerLink="/levels/list">
+                <mat-icon>format_list_bulleted</mat-icon> View Levels
+            </a>
+            <a mat-list-item routerLinkActive="active" routerLink="/developers/add">
+                <mat-icon>add</mat-icon> Add Developer
+            </a>
+            <a mat-list-item routerLinkActive="active" routerLink="/developers/list">
+                <mat-icon>format_list_bulleted</mat-icon> View Developers
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
