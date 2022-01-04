@@ -26,8 +26,15 @@ export class ApiService {
       )
   }
 
-  Get(uri: string): Observable<any> {
-    return this.http.get(`${this.endpoint}/${uri}`);
+  Get(uri: string, params: any = null): Observable<any> {
+    let qs = ''
+    if (params != null) {
+      qs = Object.keys(params)
+        .map(key => `${key}=${params[key]}`)
+        .join('&');
+    }
+
+    return this.http.get(`${this.endpoint}/${uri}?${qs}`);
   }
 
   GetByID(uri: string, id: number): Observable<any> {
@@ -55,7 +62,7 @@ export class ApiService {
       )
   }
 
-  Delete(uri: string, id : number): Observable<any> {
+  Delete(uri: string, id: number): Observable<any> {
     var API_URL = `${this.endpoint}/${uri}/${String(id)}`;
     return this.http.delete(API_URL)
       .pipe(
@@ -68,13 +75,12 @@ export class ApiService {
 
   openSnackBar(message: string, action: string): void {
     this.snackBar.open(message, action, {
-        duration: 2000,
-        panelClass: ['snackbar'],
+      duration: 2000,
+      panelClass: ['snackbar'],
     });
-}
+  }
 
   errorMgmt(error: HttpErrorResponse) {
-    console.log(error.error.message)
     let errorMessage = '';
     if (error.error!.message! != '') {
       errorMessage = error.error.message;

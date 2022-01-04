@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ComponentsRoutes } from './components.routing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,6 +40,7 @@ import { EditDevelopersComponent } from './developers/edit-developers/edit-devel
         CommonModule,
         RouterModule.forChild(ComponentsRoutes),
         ReactiveFormsModule,
+        FormsModule,
         MatDividerModule,
         MatCardModule,
         MatFormFieldModule,

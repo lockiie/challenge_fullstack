@@ -23,9 +23,7 @@ export class EditLevelsComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   uri : string = 'levels';
-  @ViewChild('chipList', { static: true }) chipList!: MatChipList;
   @ViewChild('resetLevelForm', { static: true }) myNgForm: any;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   levelForm!: FormGroup;
 
   ngOnInit() {
