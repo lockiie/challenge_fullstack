@@ -28,7 +28,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 //
@@ -65,6 +66,7 @@ import { ConfirmDialogComponent } from './components/dialog/confirm/confirm-dial
     MatInputModule,
     MatDialogModule,
     MatSnackBarModule,  
+    MatAutocompleteModule
   ],
   providers: [
     MatNativeDateModule,

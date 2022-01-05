@@ -21,6 +21,7 @@ import { MatTableModule } from '@angular/material/table'
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { LevelsComponent } from './levels/levels.component';
 import { AddLevelsComponent } from './levels/add-levels/add-levels.component';
@@ -58,7 +59,8 @@ import { EditDevelopersComponent } from './developers/edit-developers/edit-devel
         MatToolbarModule,
         MatButtonModule,
         MatNativeDateModule,
-        MatDialogModule
+        MatDialogModule,
+        MatAutocompleteModule
     ],
     declarations: [
         LevelsComponent,

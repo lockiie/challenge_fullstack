@@ -45,7 +45,6 @@ export class AddLevelsComponent implements OnInit {
 
   submitLevelForm() {
     if (this.levelForm.valid) {
-      console.log("das")
       this.levelApi.Add(this.uri, this.levelForm.value).subscribe(res => {
         this.ngZone.run(() => this.router.navigateByUrl('/levels/list'))
       });

@@ -4,6 +4,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ApiService } from '../../../shared/api.service';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Level } from 'src/app/shared/level';
 
 export interface Subject {
   name: string;
@@ -20,79 +21,74 @@ export class AddDevelopersComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
-  uri : string = 'developers';
-  @ViewChild('chipList', { static: true }) chipList: any;
-  @ViewChild('resetStudentForm', { static: true }) myNgForm: any;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  studentForm!: FormGroup;
-  subjectArray: Subject[] = [];
-  SectioinArray: any = ['A', 'B', 'C', 'D', 'E'];
-
-  ngOnInit() {
-    this.submitBookForm();
-  }
+  GenderArray = [{
+    description: 'Masculine', value: 'M'
+  },
+  {
+    description: 'Feminine', value: 'F'
+  }]
+  LevelData: Array<Level> = [];
+  uri: string = 'developers';
+  @ViewChild('resetDeveloperForm', { static: true }) myNgForm: any;
+  developerForm!: FormGroup;
 
   constructor(
     public fb: FormBuilder,
     private router: Router,
     private ngZone: NgZone,
-    private studentApi: ApiService
+    private Api: ApiService
   ) { }
 
-  /* Reactive book form */
+  ngOnInit() {
+    this.submitBookForm();
+    this.loadLevels();
+  }
+
   submitBookForm() {
-    this.studentForm = this.fb.group({
-      student_name: ['', [Validators.required]],
-      student_email: ['', [Validators.required]],
-      section: ['', [Validators.required]],
-      subjects: [this.subjectArray],
-      dob: ['', [Validators.required]],
-      gender: ['Male']
+    this.developerForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      gender: [null, [Validators.required]],
+      birth: [new Date(), [Validators.required]],
+      hobby:['', [Validators.required, Validators.maxLength(200)]],
+      level: this.fb.group({
+        id: ['', [Validators.required]],
+        name: [''],
+      })
     })
   }
 
-  /* Add dynamic languages */
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-    // Add language
-    if ((value || '').trim() && this.subjectArray.length < 5) {
-      this.subjectArray.push({ name: value.trim() })
+  loadLevels(search_name: string = '') {
+    let params = {
+      name: search_name,
+      limit: 5,
+      offset: 0
     }
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
+    this.Api.Get('levels', params).subscribe(data => {
+      this.LevelData = data.resultSet;
+    })
   }
 
-  /* Remove dynamic languages */
-  remove(subject: Subject): void {
-    const index = this.subjectArray.indexOf(subject);
-    if (index >= 0) {
-      this.subjectArray.splice(index, 1);
-    }
-  }  
-
-  /* Date */
-  formatDate(e: any) {
-    var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
-    this.studentForm.get('dob')!.setValue(convertDate, {
-      onlyself: true
-    })
-  }  
-
-  /* Get errors */
   public handleError = (controlName: string, errorName: string) => {
-    return this.studentForm.controls[controlName].hasError(errorName);
-  }  
+    return this.developerForm.controls[controlName].hasError(errorName);
+  }
 
-  /* Submit book */
-  submitStudentForm() {
-    if (this.studentForm.valid) {
-      this.studentApi.Add(this.uri, this.studentForm.value).subscribe(res => {
-        this.ngZone.run(() => this.router.navigateByUrl('/developers-list'))
+  submitDeveloperForm() {
+    if (this.developerForm.valid) {
+      const date = this.developerForm.get('birth')?.value;
+      this.developerForm.patchValue({
+        birth: new Date(date).toISOString(), 
+      });
+      this.Api.Add(this.uri, this.developerForm.value).subscribe(res => {
+        this.ngZone.run(() => this.router.navigateByUrl('/developers/list'))
       });
     }
+  }
+
+  displayLevel(id: any) {
+    if (!id) return '';
+
+    let index = this.LevelData.findIndex(level => level.id === id);
+    return this.LevelData[index].name;
   }
 
 }
