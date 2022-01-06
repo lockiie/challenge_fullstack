@@ -1,13 +1,11 @@
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { ApiService } from '../../../shared/api.service';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Level } from 'src/app/shared/level';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../dialog/confirm/confirm-dialog.component';
 
-export interface Subject {
-  name: string;
-}
 
 @Component({
   selector: 'app-edit_developers',
@@ -20,96 +18,107 @@ export class EditDevelopersComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
-  uri : string = 'developers';
-  @ViewChild('chipList', { static: true }) chipList!: MatChipList;
-  @ViewChild('resetStudentForm', { static: true }) myNgForm: any;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  studentForm!: FormGroup;
-  subjectArray: Subject[] = [];
-  SectioinArray: any = ['A', 'B', 'C', 'D', 'E'];
-
-  ngOnInit() {
-    this.updateBookForm();
-  }
+  GenderArray = [{
+    description: 'Masculine', value: 'M'
+  },
+  {
+    description: 'Feminine', value: 'F'
+  }]
+  LevelData: Array<Level> = [];
+  uri: string = 'developers';
+  @ViewChild('resetDeveloperForm', { static: true }) myNgForm: any;
+  developerForm!: FormGroup;
 
   constructor(
     public fb: FormBuilder,
     private router: Router,
     private ngZone: NgZone,
+    private Api: ApiService,
+    public dialog: MatDialog,
     private actRoute: ActivatedRoute,
-    private studentApi: ApiService
-  ) { 
-    var id = this.actRoute.snapshot.paramMap.get('id');
-    this.studentApi.GetByID(this.uri, Number(id)).subscribe(data => {
-      console.log(data.subjects)
-      this.subjectArray = data.subjects;
-      this.studentForm = this.fb.group({
-        student_name: [data.student_name, [Validators.required]],
-        student_email: [data.student_email, [Validators.required]],
-        section: [data.section, [Validators.required]],
-        subjects: [data.subjects],
-        dob: [data.dob, [Validators.required]],
-        gender: [data.gender]
-      })      
-    })    
+  ) {
   }
 
-  /* Reactive book form */
-  updateBookForm() {
-    this.studentForm = this.fb.group({
-      student_name: ['', [Validators.required]],
-      student_email: ['', [Validators.required]],
-      section: ['', [Validators.required]],
-      subjects: [this.subjectArray],
-      dob: ['', [Validators.required]],
-      gender: ['Male']
+  ngOnInit() {
+    this.loadLevels();
+    this.submitBookForm();
+  }
+
+  loadData(){
+    const id = this.actRoute.snapshot.paramMap.get('id');
+    this.Api.GetByID(this.uri, Number(id)).subscribe(data => {
+      const birth = new Date(data.birth);
+      this.developerForm = this.fb.group({
+        name: [data.name, [Validators.required]],
+        gender: [data.gender, [Validators.required]],
+        birth: [birth.toISOString().split("T")[0], [Validators.required]],
+        hobby: [data.hobby, [Validators.required, Validators.maxLength(200)]],
+        level: this.fb.group({
+          id: [data.level.id, [Validators.required]],
+          name: [data.level.name],
+        })
+      })
+    })
+
+  }
+
+  submitBookForm() {
+    this.developerForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      gender: [null, [Validators.required]],
+      birth: [new Date(), [Validators.required]],
+      hobby: ['', [Validators.required, Validators.maxLength(200)]],
+      level: this.fb.group({
+        id: ['', [Validators.required]],
+        name: [''],
+      })
     })
   }
 
-  /* Add dynamic languages */
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-    // Add language
-    if ((value || '').trim() && this.subjectArray.length < 5) {
-      this.subjectArray.push({ name: value.trim() })
+  loadLevels(search_name: string = '') {
+    let params = {
+      name: search_name,
+      limit: 5,
+      offset: 0
     }
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  /* Remove dynamic languages */
-  remove(subject: Subject): void {
-    const index = this.subjectArray.indexOf(subject);
-    if (index >= 0) {
-      this.subjectArray.splice(index, 1);
-    }
-  }
-
-  /* Date */
-  formatDate(e: any) {
-    var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
-    this.studentForm.get('dob')!.setValue(convertDate, {
-      onlyself: true
+    this.Api.Get('levels', params).subscribe(data => {
+      this.LevelData = data.resultSet;
+      this.loadData();
     })
   }
 
-  /* Get errors */
   public handleError = (controlName: string, errorName: string) => {
-    return this.studentForm.controls[controlName].hasError(errorName);
+    return this.developerForm.controls[controlName].hasError(errorName);
   }
 
-  /* Update book */
-  updateStudentForm() {
-    console.log(this.studentForm.value)
-    var id = this.actRoute.snapshot.paramMap.get('id');
-    if (window.confirm('Are you sure you want to update?')) {
-      this.studentApi.Update(this.uri, Number(id), this.studentForm.value).subscribe( res => {
-        this.ngZone.run(() => this.router.navigateByUrl('/developers-list'))
+  updateDeveloperForm() {
+    if (this.developerForm.valid) {
+      const id = this.actRoute.snapshot.paramMap.get('id');
+      const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Confirm edit developer',
+          message: 'Are you sure, you want to edit an developer'
+        }
+      });
+      confirmDialog.afterClosed().subscribe(result => {
+        if (result === true) {
+          const date = this.developerForm.get('birth')?.value;
+          this.developerForm.patchValue({
+            birth: new Date(date).toISOString(),
+          });
+          this.Api.Update(this.uri, Number(id), this.developerForm.value).subscribe(res => {
+            this.ngZone.run(() => this.router.navigateByUrl('/developers/list'))
+          });
+        }
       });
     }
   }
-  
+
+  displayLevel(id: any) {
+    if (!id) return '';
+
+    let index = this.LevelData.findIndex(level => level.id === id);
+    return this.LevelData[index].name;
+  }
+
 }
