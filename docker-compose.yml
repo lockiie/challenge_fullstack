@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:latest 
+    container_name: db 
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${PASSWORD_DB}
+      - MYSQL_DATABASE=${USER_DB}
+
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./mysql-dump:/docker-entrypoint-initdb.d
+    ports:
+      - '${PORT_DB}:${PORT_DB}'
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    restart: always
+    ports: 
+      - "${PORT_API}:${PORT_API}"
+    depends_on: 
+      - "db"
+    env_file:
+      - .env
+volumes: # add volume to persist data.
+  my-db:
+
+      

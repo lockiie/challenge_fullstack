@@ -20,8 +20,10 @@ func init() {
 		log.Fatal("Error loading .env file" + err.Error())
 	}
 
+	// db, err := sql.Open("mysql", os.Getenv("USER_DB")+":"+os.Getenv("PASSWORD_DB")+
+	// 	"@tcp("+os.Getenv("HOST_DB")+":"+os.Getenv("PORT_DB")+")/"+os.Getenv("SCHEMA_DB")+"?parseTime=true")
 	db, err := sql.Open("mysql", os.Getenv("USER_DB")+":"+os.Getenv("PASSWORD_DB")+
-		"@tcp("+os.Getenv("HOST_DB")+":"+os.Getenv("PORT_DB")+")/"+os.Getenv("SCHEMA_DB")+"?parseTime=true")
+		"@tcp(db)/"+os.Getenv("SCHEMA_DB")+"?parseTime=true")
 	if err != nil {
 		panic(err)
 	}

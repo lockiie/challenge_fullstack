@@ -1,0 +1,423 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Api for product information",
+    "version": "1.0.0",
+    "title": "Swagger Products",
+    "contact": {
+      "email": "suporte2@engendra.com.br"
+    }
+  },
+  "host": "engendra.com.br",
+  "basePath": "/sinc/api/v1",
+  "tags": [
+    {
+      "name": "API SINC",
+      "description": ""
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "tags": [
+          "products"
+        ],
+        "summary": "Finds products",
+        "description": "Search all product information",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "active",
+            "in": "query",
+            "description": "If true, the endpoint returns only active products",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "filter by name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "announce",
+            "in": "query",
+            "description": "filter by announced",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "table_id",
+            "in": "query",
+            "description": "price table id",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "company_id",
+            "in": "query",
+            "description": "return inform only of a certain company",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "integer",
+            "format": "uint32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "type": "integer",
+            "format": "uint32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/product"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters"
+          },
+          "401": {
+            "description": "The request's Authorization header is not formatted correctly or does not contain a valid token"
+          },
+          "403": {
+            "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized or Expired Token"
+          },
+          "429": {
+            "description": "The frequency of requests was greater than allowed."
+          },
+          "500": {
+            "description": "internal server failure"
+          }
+        }
+      }
+    },
+    "/products/{id}/stocks": {
+      "get": {
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "tags": [
+          "products"
+        ],
+        "summary": "Finds products stocks",
+        "description": "Search all product information",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "product id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          },
+          {
+            "name": "company_id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "uint32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/stocks"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters"
+          },
+          "401": {
+            "description": "The request's Authorization header is not formatted correctly or does not contain a valid token"
+          },
+          "403": {
+            "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized or Expired Token"
+          },
+          "429": {
+            "description": "The frequency of requests was greater than allowed."
+          },
+          "500": {
+            "description": "internal server failure"
+          }
+        }
+      }
+    },
+    "/products/{id}/prices": {
+      "get": {
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "tags": [
+          "products"
+        ],
+        "summary": "Finds products prices",
+        "description": "Search all product information",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "product id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          },
+          {
+            "name": "table_id",
+            "in": "query",
+            "description": "price table id",
+            "required": false,
+            "type": "integer",
+            "format": "uint32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/prices"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters"
+          },
+          "401": {
+            "description": "The request's Authorization header is not formatted correctly or does not contain a valid token"
+          },
+          "403": {
+            "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized or Expired Token"
+          },
+          "429": {
+            "description": "The frequency of requests was greater than allowed."
+          },
+          "500": {
+            "description": "internal server failure"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Authorization": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "product": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string",
+          "format": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "barcode": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "unit_trib": {
+          "type": "string",
+          "description": "Tax unit"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "complement": {
+          "type": "string"
+        },
+        "size": {
+          "type": "number",
+          "format": "float32"
+        },
+        "width": {
+          "type": "number",
+          "format": "float32"
+        },
+        "height": {
+          "type": "number",
+          "format": "float32"
+        },
+        "depth": {
+          "type": "number",
+          "format": "float32"
+        },
+        "weight": {
+          "type": "number",
+          "format": "float32"
+        },
+        "weight_gross": {
+          "type": "number",
+          "format": "float32"
+        },
+        "cost": {
+          "type": "number",
+          "format": "float32"
+        },
+        "value": {
+          "type": "number",
+          "format": "float32"
+        },
+        "margin": {
+          "type": "number",
+          "format": "float32"
+        },
+        "announce": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": "string"
+        },
+        "html_description": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/images"
+          }
+        },
+        "stocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/stocks"
+          }
+        },
+        "subGroup": {
+          "$ref": "#/definitions/subGroup"
+        },
+        "group": {
+          "$ref": "#/definitions/group"
+        },
+        "manufacturer": {
+          "$ref": "#/definitions/manufacturer"
+        }
+      }
+    },
+    "stocks": {
+      "type": "object",
+      "properties": {
+        "company_id": {
+          "type": "integer",
+          "format": "uint8"
+        },
+        "stock": {
+          "type": "number"
+        },
+        "stock_reserve": {
+          "type": "number"
+        }
+      }
+    },
+    "images": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "integer",
+          "format": "uint8"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "prices": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "format": "float32"
+        },
+        "cost": {
+          "type": "number",
+          "format": "float32"
+        }
+      }
+    },
+    "subGroup": {
+      "type": "object",
+      "properties": {
+        "subGroup_id": {
+          "type": "integer",
+          "format": "uint32"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "type": "integer",
+          "format": "uint32"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "manufacturer": {
+      "type": "object",
+      "properties": {
+        "manufacturer_id": {
+          "type": "integer",
+          "format": "uint32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

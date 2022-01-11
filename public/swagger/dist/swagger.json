@@ -1,0 +1,661 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API for using Chanllenge Fullstack",
+    "version": "0.0.0.1",
+    "title": "Swagger Chanllenge Fullstack",
+    "contact": {
+      "email": "lucaspechebelok@gmail.com"
+    }
+  },
+  "host": "localhost:4000",
+  "basePath": "/api/v0",
+  "tags": [
+    {
+      "name": "levels",
+      "description": "All about the levels"
+    },
+    {
+      "name": "developers",
+      "description": "All about developers"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/levels": {
+      "post": {
+        "tags": [
+          "levels"
+        ],
+        "summary": "Add a level",
+        "description": "Add a new category",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Level body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Level"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Registered level",
+            "schema": {
+              "$ref": "#/definitions/Level"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "levels"
+        ],
+        "summary": "Search levels",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Level name",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Order by",
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Pagination",
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Pagination",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Levels returned",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ResultSetLevel"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/levels/{ID}": {
+      "put": {
+        "tags": [
+          "levels"
+        ],
+        "summary": "Update level",
+        "description": "Update level",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "level id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Level body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Level"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Category successfully changed"
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Level not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "levels"
+        ],
+        "summary": "Delete level by id",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "Level id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Level deleted"
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Level not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "501": {
+            "description": "Record with dependent item",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "levels"
+        ],
+        "summary": "Search level by id",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "level id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Level returned",
+            "schema": {
+              "$ref": "#/definitions/Level"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Level not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/developers": {
+      "post": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Add a developer",
+        "description": "Add a new developer",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Developer body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Developer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Registered developer",
+            "schema": {
+              "$ref": "#/definitions/Developer"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Search developers",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Developer name",
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "description": "Developer gender",
+            "type": "string",
+            "enum": [
+              "M",
+              "F"
+            ]
+          },
+          {
+            "name": "birth_initial",
+            "in": "query",
+            "type": "string",
+            "format": "date-time",
+            "description": "exemple yyyy-MM-ddTHH:mm:ssZ. To use this filter it is necessary to send the birth_final"
+          },
+          {
+            "name": "birth_final",
+            "in": "query",
+            "type": "string",
+            "format": "date-time",
+            "description": "exemple yyyy-MM-ddTHH:mm:ssZ. To use this filter it is necessary to send the birth_initial"
+          },
+          {
+            "name": "hobby",
+            "in": "query",
+            "description": "Developer hobby",
+            "type": "string"
+          },
+          {
+            "name": "level_id",
+            "in": "query",
+            "description": "Developer level",
+            "type": "integer"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Order by",
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Pagination",
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Pagination",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Developers returned",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ResultSetDeveloper"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/developers/{ID}": {
+      "put": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Update developer",
+        "description": "Update developer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "developer id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Developer body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Developer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Developer successfully changed"
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Developer not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Delete developer by id",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "developer id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Developer deleted"
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Developer not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Search developer by id",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "developer id",
+            "required": true,
+            "type": "integer",
+            "format": "uint32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Developer returned",
+            "schema": {
+              "$ref": "#/definitions/Developer"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Developer not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Level": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "uint32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Developer": {
+      "type": "object",
+      "required": [
+        "name",
+        "gender",
+        "birth",
+        "level"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "uint32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "M",
+            "F"
+          ]
+        },
+        "birth": {
+          "type": "string",
+          "format": "date-time",
+          "example": "yyyy-MM-ddTHH:mm:ssZ"
+        },
+        "hobby": {
+          "type": "string"
+        },
+        "level": {
+          "$ref": "#/definitions/Level"
+        }
+      }
+    },
+    "ResultSetLevel": {
+      "type": "object",
+      "properties": {
+        "returnedTotal": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "string"
+        },
+        "resultSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Level"
+          }
+        }
+      }
+    },
+    "ResultSetDeveloper": {
+      "type": "object",
+      "properties": {
+        "returnedTotal": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "string"
+        },
+        "resultSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Developer"
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

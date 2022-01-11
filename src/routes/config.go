@@ -17,11 +17,15 @@ func LoadRoutes() {
 
 	app.Use(cors.New())
 
+	app.Static("challenge_fullstack", "./public/challenge_fullstack")
+
 	// app.Get("/dashboard", monitor.New())
 
 	api := app.Group("/api")
 
 	v0 := api.Group("/v0")
+
+	v0.Static("/swagger", "./public/swagger/dist")
 
 	developers := v0.Group("/developers")
 

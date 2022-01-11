@@ -6,7 +6,7 @@
 
 <p *ngIf="LevelData.length <= 0" class="no-data">There is no level added yet!</p>
 
-<mat-form-field class="search">
+<mat-form-field class="search" *ngIf="LevelData.length > 0">
     <span matPrefix> </span>
     <input type="text" matInput placeholder="Search by name" name="search_name" [(ngModel)]="search_name">
     <button (click)="loadData(search_name)" matSuffix mat-button><mat-icon >search</mat-icon></button>
